@@ -1,8 +1,10 @@
 mod subcommands;
+pub use subcommands::apply;
+
+mod exit;
+pub(crate) use exit::exit;
 
 use structopt::{clap::AppSettings, StructOpt};
-
-pub use subcommands::apply;
 
 const ABOUT_LOCALENV: &str ="\
     localenv is a command line tool to provision your local development environment with declarative manner.

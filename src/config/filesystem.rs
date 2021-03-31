@@ -1,17 +1,20 @@
 use serde::Deserialize;
 
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 #[derive(Deserialize, Debug)]
 pub struct Filesystem {
     base: Option<PathBuf>,
-    entries: Vec<FilesystemEntry>,
+    entries: HashMap<String, FilesystemEntry>,
 }
 
 #[derive(Deserialize, Debug)]
 pub enum FilesystemEntry {
+    #[serde(rename = "symboliclink")]
     SymbolicLink(SymbolicLink),
+    #[serde(rename = "file")]
     File(File),
+    #[serde(rename = "directory")]
     Directory(Directory),
 }
 
@@ -22,6 +25,7 @@ pub struct SymbolicLink {}
 pub struct File {
     env_base: Option<String>,
     relative_path: Option<String>,
+    content_from: PathBuf,
 }
 
 #[derive(Deserialize, Debug)]

@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::prelude::*;
+use crate::{cli, config, prelude::*};
 
 const APPLY_ABOUT: &str = "\
 about apply subcommand...
@@ -16,5 +16,17 @@ pub struct Apply {
 }
 
 pub async fn run(opt: Apply) {
-    info!("running...")
+    // Validate opt if needed.
+    if let Err(err) = apply(opt).await {
+        error!("{}", err);
+        cli::exit(None);
+    }
+}
+
+async fn apply(opt: Apply) -> Result<()> {
+    let config = config::Config::load_from_dir(&opt.config_dir_path).await?;
+
+    debug!("load configuration {:#?}", config);
+
+    Ok(())
 }

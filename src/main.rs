@@ -1,6 +1,7 @@
 mod cli;
-mod prelude;
 mod config;
+mod error;
+mod prelude;
 
 // Parse command line args, then dispatch process.
 async fn run() {
