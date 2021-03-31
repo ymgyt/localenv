@@ -1,0 +1,10 @@
+localenv: '1'
+
+required_envs:
+  - name: HOME
+    description: path to user home directory
+
+filesystem:
+  - env_base: HOME
+    relative_path: .config/alacritty/alacritty.yml
+    content_from: static/alacritty/alacritty.yml

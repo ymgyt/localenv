@@ -1,0 +1,14 @@
+[package]
+authors = ["ymgyt <yamaguchi7073xtt@gmail.com>"]
+edition = "2018"
+name = "localenv"
+version = "0.1.0"
+[dependencies]
+serde = {features = ["derive"]}
+structopt = "0.3.21"
+tracing = "*"
+tracing-subscriber = "*"
+
+[dependencies.tokio]
+features = ["io-util", "rt", "rt-multi-thread", "fs"]
+version = "1"
