@@ -48,6 +48,18 @@ impl From<ErrorKind> for Error {
     }
 }
 
+macro_rules! impl_from_error {
+    ($e:path, $kind:path) => {
+        impl From<$e> for Error {
+            fn from(err: $e) -> Self {
+                Error::from($kind(err))
+            }
+        }
+    };
+}
+
+impl_from_error!(io::Error, ErrorKind::Io);
+
 impl Error {
     pub fn kind(&self) -> &ErrorKind {
         &self.kind

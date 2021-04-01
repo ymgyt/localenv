@@ -1,32 +1,51 @@
 use serde::Deserialize;
 
-use std::{collections::HashMap, path::PathBuf};
+use std::{
+    collections::HashMap,
+    env,
+    path::{Path, PathBuf},
+};
 
 #[derive(Deserialize, Debug)]
 pub struct Filesystem {
-    base: Option<PathBuf>,
-    entries: HashMap<String, FilesystemEntry>,
+    pub base: Option<PathBuf>,
+    pub entries: HashMap<String, FilesystemEntry>,
 }
 
 #[derive(Deserialize, Debug)]
 pub enum FilesystemEntry {
     #[serde(rename = "symboliclink")]
-    SymbolicLink(SymbolicLink),
+    SymbolicLink(SymlinkEntry),
     #[serde(rename = "file")]
-    File(File),
+    File(FileEntry),
     #[serde(rename = "directory")]
-    Directory(Directory),
+    Directory(DirectoryEntry),
 }
 
 #[derive(Deserialize, Debug)]
-pub struct SymbolicLink {}
+pub struct SymlinkEntry {}
 
-#[derive(Deserialize, Debug)]
-pub struct File {
-    env_base: Option<String>,
-    relative_path: Option<String>,
-    content_from: PathBuf,
+#[derive(Deserialize, Debug, Clone)]
+pub struct FileEntry {
+    pub env_base: Option<String>,
+    pub relative_path: Option<String>,
+    pub content_from: PathBuf,
+}
+
+impl FileEntry {
+    pub fn dest_path(&self) -> PathBuf {
+        if let Some(key) = &self.env_base {
+            Path::new(&env::var_os(key).expect("env undefined"))
+                .join(self.relative_path.as_ref().expect("relative_path"))
+        } else {
+            unimplemented!("expect env_base")
+        }
+    }
+
+    pub fn src_path(&self, root: impl AsRef<Path>) -> PathBuf {
+        root.as_ref().join(self.content_from.as_path())
+    }
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Directory {}
+pub struct DirectoryEntry {}

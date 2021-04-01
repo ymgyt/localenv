@@ -1,5 +1,5 @@
 mod filesystem;
-pub use filesystem::Filesystem;
+pub use filesystem::{FileEntry, Filesystem, FilesystemEntry};
 
 use serde::Deserialize;
 use tokio::fs;
@@ -15,17 +15,17 @@ const DEFAULT_CONFIG_FILE: &str = "localenv.yaml";
 
 #[derive(Debug)]
 pub struct Config {
-    spec: Spec,
-    root_dir: PathBuf,
+    pub spec: Spec,
+    pub root_dir: PathBuf,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Spec {
     #[serde(rename = "localenv")]
-    version: String,
+    pub version: String,
 
-    required_envs: Vec<RequiredEnvEntry>,
-    filesystem: Filesystem,
+    pub required_envs: Vec<RequiredEnvEntry>,
+    pub filesystem: Filesystem,
 }
 
 #[derive(Deserialize, Debug)]
@@ -63,9 +63,11 @@ impl Config {
             }
         })?;
 
-        Ok(Self {
+        let cfg = Self {
             spec,
             root_dir: dir_path,
-        })
+        };
+
+        Ok(cfg)
     }
 }
