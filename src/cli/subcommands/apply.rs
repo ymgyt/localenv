@@ -13,6 +13,9 @@ about apply subcommand...
 pub struct Apply {
     #[structopt(long = "dir", help = "configuration directory path to apply.")]
     pub config_dir_path: PathBuf, // NOTE: required or default current directory.
+
+    #[structopt(long = "dry-run", help = "no changed will occur in dry run mode.")]
+    pub dry_run: bool,
 }
 
 pub async fn run(opt: Apply) {
@@ -32,7 +35,13 @@ async fn apply(opt: Apply) -> Result<()> {
     let ops_chain = operation::plan(&mut system, &config).await?;
     debug!("planed operations {:#?}", ops_chain);
 
-    operation::apply(&mut system, &config, &ops_chain).await?;
+    operation::apply(operation::ApplyParam {
+        system: &mut system,
+        config: &config,
+        operation_chain: &ops_chain,
+        dry_run: opt.dry_run,
+    })
+    .await?;
 
     Ok(())
 }

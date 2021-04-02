@@ -5,4 +5,4 @@ mod plan;
 pub use plan::plan;
 
 mod apply;
-pub use apply::apply;
+pub use apply::{apply,ApplyParam};

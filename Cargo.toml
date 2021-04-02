@@ -5,6 +5,7 @@ name = "localenv"
 version = "0.1.0"
 [dependencies]
 backtrace = "0.3"
+colored = "2"
 serde_yaml = "0.8"
 structopt = "0.3.21"
 tracing = "0.1"
