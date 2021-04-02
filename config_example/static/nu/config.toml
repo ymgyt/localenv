@@ -1,12 +1,19 @@
-prompt = "starship prompt"
 
 startup = [
 	"alias c = cargo",
+    "alias cc = clear",
 	"alias g = git",
 	"alias t = task",
 	"alias w = watchecex -e go -r -v go run internal/main.go",
 	]
 
+path = [
+    "/usr/local/bin",
+    "/usr/local/go/bin",
+    "/Users/ymgyt/.cargo/bin",
+]
+
 [line_editor]
 edit_mode = "vi"
 
+prompt = "starship prompt"

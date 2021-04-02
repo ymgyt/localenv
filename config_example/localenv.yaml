@@ -13,3 +13,18 @@ filesystem:
       content_from: static/alacritty/alacritty.yml
       mode: 0644
 
+  - file:
+      description: nushell config file.
+      env_base: HOME
+      relative_path: .config/nu/config.toml
+      content_from: static/nu/config.toml
+      mode: 0644
+
+  - symlink:
+     description: nushell symlink for mac.
+     original_env_base: HOME
+     original_relative_path: .config/nu/config.toml
+     link_env_base: HOME
+     link_relative_path: Library/Application Support/org.nushell.nu/config.toml
+     condition:
+       os: mac
