@@ -6,8 +6,8 @@ required_envs:
 
 filesystem:
   entries:
-    alacritty_config:
-      file:
-        env_base: HOME
-        relative_path: .config/alacritty/alacritty.yml
-        content_from: static/alacritty/alacritty.yml
+  - file:
+      description: alacritty config file.
+      env_base: HOME
+      relative_path: .config/alacritty/alacritty.yml
+      content_from: static/alacritty/alacritty.yml

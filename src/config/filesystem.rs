@@ -1,7 +1,6 @@
 use serde::Deserialize;
 
 use std::{
-    collections::HashMap,
     env,
     path::{Path, PathBuf},
 };
@@ -9,7 +8,7 @@ use std::{
 #[derive(Deserialize, Debug)]
 pub struct Filesystem {
     pub base: Option<PathBuf>,
-    pub entries: HashMap<String, FilesystemEntry>,
+    pub entries: Vec<FilesystemEntry>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -30,6 +29,7 @@ pub struct FileEntry {
     pub env_base: Option<String>,
     pub relative_path: Option<String>,
     pub content_from: PathBuf,
+    pub description: String,
 }
 
 impl FileEntry {

@@ -17,8 +17,8 @@ where
         .filesystem
         .entries
         .iter()
-        .inspect(|(name, entry)| trace!("{} {:?}", name, entry))
-        .for_each(|(_name, entry)| match entry {
+        .inspect(|entry| trace!("{:?}",entry))
+        .for_each(|entry| match entry {
             FilesystemEntry::File(file) => {
                 let ops = Operation::create_file(file.clone());
                 chain.add(ops);
