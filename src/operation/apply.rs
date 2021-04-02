@@ -55,15 +55,16 @@ where
     let mut content = fs::File::open(src.as_path())?;
 
     // TODO use system api.
-    let msg = format!("[Create file]\n    Desc: {}\n    File: {}",
+    let msg = format!(
+        "[Create file]\n    Desc: {}\n    File: {}",
         entry.description,
         dest.display(),
     );
-    println!("{}",msg.yellow());
+    println!("{}", msg.yellow());
 
     if dry_run {
         Ok(())
     } else {
-        system.create_file(dest, &mut content)
+        system.create_file(dest, &mut content, entry.permission()?)
     }
 }

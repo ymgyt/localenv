@@ -1,5 +1,5 @@
 mod filesystem;
-pub use filesystem::{FileEntry, Filesystem, FilesystemEntry};
+pub use filesystem::{FileEntry, Filesystem, FilesystemEntry, FilePermission};
 
 use serde::Deserialize;
 use tokio::fs;

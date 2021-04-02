@@ -10,7 +10,6 @@ pub struct Error {
 
 #[derive(Debug)]
 pub enum ErrorKind {
-    #[allow(dead_code)]
     Internal(String),
     /// Configuration file not found.
     ConfigFileNotFound { path: PathBuf },
@@ -19,6 +18,8 @@ pub enum ErrorKind {
         yaml_err: serde_yaml::Error,
         path: PathBuf,
     },
+    /// Invalid file permission.
+    InvalidFilePermission{ raw: String },
     /// General unhandled I/O error.
     Io(io::Error),
 }
@@ -37,6 +38,9 @@ impl fmt::Display for Error {
                 path.display(),
                 yaml_err
             ),
+            InvalidFilePermission{ raw, ..} => {
+                write!(f, "invalid file permission mode: {} (expect like that 664,700)", raw)
+            }
             Io(err) => write!(f, "I/O error: {}", err),
         }
     }
@@ -61,6 +65,10 @@ macro_rules! impl_from_error {
 impl_from_error!(io::Error, ErrorKind::Io);
 
 impl Error {
+    pub fn internal<T>(msg: &str) -> Result<T,Self> {
+        Err(Error::from(ErrorKind::Internal(msg.to_owned())))
+    }
+
     pub fn kind(&self) -> &ErrorKind {
         &self.kind
     }

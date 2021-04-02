@@ -11,3 +11,5 @@ filesystem:
       env_base: HOME
       relative_path: .config/alacritty/alacritty.yml
       content_from: static/alacritty/alacritty.yml
+      mode: 0644
+
