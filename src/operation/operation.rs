@@ -37,6 +37,12 @@ impl Operation {
         }))
     }
 
+    pub (super) fn create_symbolic_link(entry: config::SymlinkEntry) -> Self {
+        Operation::with(OperationKind::Filesystem(FilesystemOperation::CreateSymbolicLink {
+            entry,
+        }))
+    }
+
     fn with(kind: OperationKind) -> Self {
         Self { kind }
     }
@@ -50,4 +56,5 @@ pub enum OperationKind {
 #[derive(Debug)]
 pub enum FilesystemOperation {
     CreateFile { entry: config::FileEntry },
+    CreateSymbolicLink { entry: config::SymlinkEntry },
 }

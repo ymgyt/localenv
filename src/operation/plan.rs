@@ -5,7 +5,7 @@ use crate::{
     system,
 };
 
-pub async fn plan<Api>(mut _system: Api, config: &Config) -> Result<OperationChain>
+pub async fn plan<Api>(sys: Api, config: &Config) -> Result<OperationChain>
 where
     Api: system::Api,
 {
@@ -15,13 +15,26 @@ where
     config.spec.filesystem.entries.iter().for_each(|entry| {
         trace!("{:?}", entry);
 
-        match entry {
-            FilesystemEntry::File(file) => {
-                let ops = Operation::create_file(file.clone());
-                chain.add(ops);
+        // check condition
+        if let Some(cond) = entry.condition() {
+
+            // check os
+            if let Some(os) = cond.os {
+                if os != sys.os() {
+                    debug!("entry {} does not match os condition. os: {}", entry.description(), os);
+                    return
+                }
+                debug!("entry {} match os condition", entry.description());
             }
-            _ => unimplemented!(),
         }
+
+        let ops = match entry {
+            FilesystemEntry::File(file) => Operation::create_file(file.clone()),
+            FilesystemEntry::SymbolicLink(sym) => Operation::create_symbolic_link(sym.clone()),
+            _ => unimplemented!(),
+        };
+
+        chain.add(ops);
     });
 
     Ok(chain)

@@ -1,8 +1,13 @@
 use std::{fs, io, path::Path};
 
-use crate::{config::FilePermission, prelude::*, system};
+use crate::{
+    prelude::*,
+    system::{self, FilePermission,Os},
+};
 
-pub struct System {}
+pub struct System {
+    os: Os,
+}
 
 impl system::Api for System {
     #[cfg(target_family = "unix")]
@@ -39,20 +44,55 @@ impl system::Api for System {
 
         Ok(())
     }
+
+    #[cfg(target_family = "unix")]
+    fn create_symbolic_link<P, Q>(&mut self, original: P, link: Q) -> Result<()>
+    where
+        P: AsRef<Path>,
+        Q: AsRef<Path>,
+    {
+        return match std::os::unix::fs::symlink(&original, &link) {
+            Ok(_) => Ok(()),
+            Err(io_err) => {
+                if let io::ErrorKind::AlreadyExists = io_err.kind() {
+                    // TODO: delegate api implementation.
+                    debug!("{} already exists, try removing", link.as_ref().display());
+                    fs::remove_file(&link)?;
+                    // TODO: care infinite loop.
+                    return self.create_symbolic_link(original, link)
+                }
+                Err(io_err.into())
+            }
+        }
+    }
+
+    fn os(&self) -> Os { self.os }
 }
 
 impl<'a, T: system::Api> system::Api for &'a mut T {
-    fn create_file<P, R>(&mut self, dest: P, content: R,permission: FilePermission) -> Result<()>
+    fn create_file<P, R>(&mut self, dest: P, content: R, permission: FilePermission) -> Result<()>
     where
         P: AsRef<Path>,
         R: io::Read,
     {
         (**self).create_file(dest, content, permission)
     }
+
+    fn create_symbolic_link<P, Q>(&mut self, original: P, link: Q) -> Result<()>
+    where
+        P: AsRef<Path>,
+        Q: AsRef<Path>,
+    {
+        (**self).create_symbolic_link(original, link)
+    }
+
+    fn os(&self) -> Os {(**self).os() }
 }
 
 impl System {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            os: Os::detect(),
+        }
     }
 }

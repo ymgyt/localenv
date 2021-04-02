@@ -3,7 +3,7 @@ use std::fs;
 use colored::*;
 
 use crate::{
-    config::{Config, FileEntry},
+    config::{Config, FileEntry,SymlinkEntry},
     operation::{FilesystemOperation, OperationChain, OperationKind},
     prelude::*,
     system,
@@ -34,6 +34,9 @@ where
                 FilesystemOperation::CreateFile { entry, .. } => {
                     apply_create_file_blocking(&mut system, config, dry_run, entry)?;
                 }
+                FilesystemOperation::CreateSymbolicLink { entry, ..} => {
+                    apply_create_symbolic_link_blocking(&mut system,config, dry_run, entry)?;
+                }
             },
         }
     }
@@ -57,7 +60,7 @@ where
     // TODO use system api.
     let msg = format!(
         "[Create file]\n    Desc: {}\n    File: {}",
-        entry.description,
+        entry.description(),
         dest.display(),
     );
     println!("{}", msg.yellow());
@@ -66,5 +69,32 @@ where
         Ok(())
     } else {
         system.create_file(dest, &mut content, entry.permission()?)
+    }
+}
+
+fn apply_create_symbolic_link_blocking<Api>(
+    system: &mut Api,
+    _cfg: &Config,
+    dry_run: bool,
+    entry: &SymlinkEntry,
+) -> Result<()>
+where
+    Api: system::Api,
+{
+    let original = entry.original_path();
+    let link = entry.link_path();
+
+    let msg = format!(
+        "[Create symlink]\n    Desc: {}\n    Orig: {}\n    Link: {}",
+        entry.description(),
+        original.display(),
+        link.display(),
+    );
+    println!("{}", msg.yellow());
+
+    if dry_run {
+        Ok(())
+    } else {
+        system.create_symbolic_link(original, link)
     }
 }
