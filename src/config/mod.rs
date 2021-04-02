@@ -51,8 +51,7 @@ impl Config {
             .map_err(|io_err| match io_err.kind() {
                 io::ErrorKind::NotFound => ErrorKind::ConfigFileNotFound {
                     path: config_path.clone(),
-                }
-                .into(),
+                },
                 _ => ErrorKind::Io(io_err),
             })?;
 
