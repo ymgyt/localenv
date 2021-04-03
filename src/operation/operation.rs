@@ -51,6 +51,10 @@ impl<T> Operation<T> {
         ))
     }
 
+    pub(super) fn install_command(cmd: config::Command) -> Self {
+        Operation::with(OperationKind::Command(CommandOperation::Install { cmd }))
+    }
+
     fn with(kind: OperationKind) -> Self {
         Self { kind, result: None }
     }
@@ -59,10 +63,16 @@ impl<T> Operation<T> {
 #[derive(Debug)]
 pub enum OperationKind {
     Filesystem(FilesystemOperation),
+    Command(CommandOperation),
 }
 
 #[derive(Debug)]
 pub enum FilesystemOperation {
     CreateFile { entry: config::FileEntry },
     CreateSymbolicLink { entry: config::SymlinkEntry },
+}
+
+#[derive(Debug)]
+pub enum CommandOperation {
+    Install { cmd: config::Command },
 }

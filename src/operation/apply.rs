@@ -36,6 +36,7 @@ where
                     apply_create_symbolic_link_blocking(&mut system, config, dry_run, entry)
                 }
             },
+            _ => unimplemented!()
         };
 
         ops.set_result(result);

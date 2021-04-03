@@ -1,5 +1,7 @@
 mod operation;
-pub use operation::{FilesystemOperation, Operation, OperationChain, OperationKind};
+pub use operation::{
+    CommandOperation, FilesystemOperation, Operation, OperationChain, OperationKind,
+};
 
 mod plan;
 pub use plan::plan;

@@ -2,7 +2,7 @@ use colored::*;
 
 use crate::{
     config::Config,
-    operation::{FilesystemOperation, OperationChain, OperationKind},
+    operation::{FilesystemOperation, OperationChain, OperationKind,CommandOperation},
     prelude::*,
     system,
 };
@@ -51,6 +51,18 @@ where
                     system.display(msg.yellow());
                 }
             },
+            OperationKind::Command(cmd_ops) => match cmd_ops{
+                CommandOperation::Install { cmd, ..} => {
+                    let msg = format!(
+                        "[Install command]\n     Bin: {}\n     Ver: {}\n    From: {:?}",
+                        &cmd.bin,
+                        &cmd.version,
+                        &cmd.installer,
+                    );
+
+                    system.display(msg.yellow());
+                }
+            }
         }
     }
 

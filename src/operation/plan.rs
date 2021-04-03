@@ -40,5 +40,12 @@ where
         chain.add(ops);
     });
 
+    // commands
+    config.spec.commands.iter().for_each(|cmd| {
+        let ops = Operation::install_command(cmd.clone());
+
+        chain.add(ops);
+    });
+
     Ok(chain)
 }
