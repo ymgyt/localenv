@@ -2,7 +2,7 @@ use colored::*;
 
 use crate::{
     config::Config,
-    operation::{FilesystemOperation, OperationChain, OperationKind,CommandOperation},
+    operation::{CommandOperation, FilesystemOperation, OperationChain, OperationKind},
     prelude::*,
     system,
 };
@@ -51,18 +51,26 @@ where
                     system.display(msg.yellow());
                 }
             },
-            OperationKind::Command(cmd_ops) => match cmd_ops{
-                CommandOperation::Install { cmd, ..} => {
+            OperationKind::Command(cmd_ops) => match cmd_ops {
+                CommandOperation::Install { cmd, .. } => {
                     let msg = format!(
                         "[Install command]\n     Bin: {}\n     Ver: {}\n    From: {:?}",
-                        &cmd.bin,
-                        &cmd.version,
-                        &cmd.installer,
+                        &cmd.bin, &cmd.version, &cmd.installer,
                     );
 
                     system.display(msg.yellow());
                 }
-            }
+            },
+        }
+
+        if let Some(result) = ops.result() {
+            use std::borrow::Cow;
+            let result: Cow<str> = match result {
+                Ok(_) => "Success".into(),
+                Err(err) => format!("{:?}", err.kind()).into(),
+            };
+            let msg = format!("  Result: {}", result);
+            system.display(msg.yellow());
         }
     }
 

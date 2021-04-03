@@ -52,12 +52,19 @@ impl Config {
 
         let f = fs::File::open(&config_path)
             .await
-            .map_err(|io_err| match io_err.kind() {
-                io::ErrorKind::NotFound => ErrorKind::ConfigFileNotFound {
-                    path: config_path.clone(),
-                },
-                _ => ErrorKind::Io(io_err),
-            })?;
+            .map_err(|io_err| {
+                Error::from(match io_err.kind() {
+                    io::ErrorKind::NotFound => ErrorKind::ConfigFileNotFound {
+                        path: config_path.clone(),
+                    },
+                    _ => ErrorKind::Io(io_err),
+                })
+            })
+            .context(format!(
+                "trying load configuration. dir: {} file: {}",
+                dir_path.display(),
+                DEFAULT_CONFIG_FILE
+            ))?;
 
         let spec = serde_yaml::from_reader::<_, Spec>(f.into_std().await).map_err(|e| {
             ErrorKind::ConfigFileParseFailed {

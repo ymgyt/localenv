@@ -46,4 +46,3 @@ pub enum SubCommand {
     Apply(subcommands::Apply),
     Plan(subcommands::Plan),
 }
-

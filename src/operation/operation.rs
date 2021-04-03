@@ -35,6 +35,9 @@ impl<T> Operation<T> {
     pub(super) fn kind(&self) -> &OperationKind {
         &self.kind
     }
+    pub (super) fn result(&self) -> Option<&Result<T>> {
+        self.result.as_ref()
+    }
     pub(super) fn set_result(&mut self, result: Result<T>) {
         self.result = Some(result);
     }

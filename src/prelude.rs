@@ -5,3 +5,5 @@ pub use tracing::{debug, error, info, trace, warn};
 pub type Result<T, E = crate::error::Error> = std::result::Result<T, E>;
 
 pub use crate::error::{Error, ErrorKind};
+
+pub use crate::error::ErrorContext as _;

@@ -2,7 +2,7 @@ use std::fs;
 
 use crate::{
     config::{Config, FileEntry, SymlinkEntry},
-    operation::{FilesystemOperation, OperationChain, OperationKind},
+    operation::{CommandOperation, FilesystemOperation, OperationChain, OperationKind},
     prelude::*,
     system,
 };
@@ -28,7 +28,7 @@ where
 
     for ops in operation_chain.operations_mut() {
         let result = match ops.kind() {
-            OperationKind::Filesystem(fs) => match fs {
+            OperationKind::Filesystem(ops_fs) => match ops_fs {
                 FilesystemOperation::CreateFile { entry, .. } => {
                     apply_create_file_blocking(&mut system, config, dry_run, entry)
                 }
@@ -36,7 +36,9 @@ where
                     apply_create_symbolic_link_blocking(&mut system, config, dry_run, entry)
                 }
             },
-            _ => unimplemented!()
+            OperationKind::Command(ops_cmd) => match ops_cmd {
+                CommandOperation::Install { cmd: _, .. } => Error::internal("not implemented"),
+            },
         };
 
         ops.set_result(result);

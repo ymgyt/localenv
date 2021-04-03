@@ -28,7 +28,10 @@ pub async fn run(opt: Apply) {
 
 async fn apply(opt: Apply) -> Result<()> {
     let mut system = System::new();
-    let (config,mut ops_chain) = helper::operation_chain(&mut system, opt.config_dir_path.as_path()).await?;
+    let (config, mut ops_chain) =
+        helper::operation_chain(&mut system, opt.config_dir_path.as_path())
+            .await
+            .context("running apply")?;
 
     operation::apply(operation::ApplyParam {
         system: &mut system,
@@ -37,6 +40,12 @@ async fn apply(opt: Apply) -> Result<()> {
         dry_run: opt.dry_run,
     })
     .await?;
+
+    operation::display(operation::DisplayParam{
+        operation_chain: &ops_chain,
+        system: &mut system,
+        config: &config,
+    }).await?;
 
     Ok(())
 }
