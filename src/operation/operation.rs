@@ -1,4 +1,4 @@
-use crate::config;
+use crate::{config, prelude::Result};
 
 #[derive(Debug)]
 pub struct OperationChain {
@@ -19,16 +19,24 @@ impl OperationChain {
     pub(super) fn operations(&self) -> &[Operation] {
         self.operations.as_slice()
     }
+
+    pub(super) fn operations_mut(&mut self) -> &mut [Operation] {
+        self.operations.as_mut()
+    }
 }
 
 #[derive(Debug)]
-pub struct Operation {
+pub struct Operation<T = ()> {
     kind: OperationKind,
+    result: Option<Result<T>>,
 }
 
-impl Operation {
+impl<T> Operation<T> {
     pub(super) fn kind(&self) -> &OperationKind {
         &self.kind
+    }
+    pub(super) fn set_result(&mut self, result: Result<T>) {
+        self.result = Some(result);
     }
 
     pub(super) fn create_file(entry: config::FileEntry) -> Self {
@@ -37,14 +45,14 @@ impl Operation {
         }))
     }
 
-    pub (super) fn create_symbolic_link(entry: config::SymlinkEntry) -> Self {
-        Operation::with(OperationKind::Filesystem(FilesystemOperation::CreateSymbolicLink {
-            entry,
-        }))
+    pub(super) fn create_symbolic_link(entry: config::SymlinkEntry) -> Self {
+        Operation::with(OperationKind::Filesystem(
+            FilesystemOperation::CreateSymbolicLink { entry },
+        ))
     }
 
     fn with(kind: OperationKind) -> Self {
-        Self { kind }
+        Self { kind, result: None }
     }
 }
 

@@ -1,6 +1,9 @@
-use std::{io, path::Path};
+use std::{fmt, io, path::Path};
 
-use crate::{prelude::*, system::{Os,FilePermission}};
+use crate::{
+    prelude::*,
+    system::{FilePermission, Os},
+};
 
 pub trait Api {
     fn create_file<P, R>(&mut self, dest: P, content: R, permission: FilePermission) -> Result<()>
@@ -14,4 +17,8 @@ pub trait Api {
         Q: AsRef<Path>;
 
     fn os(&self) -> Os;
+
+    fn display<D>(&self, msg: D)
+    where
+        D: fmt::Display;
 }

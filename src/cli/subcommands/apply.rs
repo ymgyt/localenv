@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::{cli, config, operation, prelude::*, system::System};
+use crate::{cli::helper, operation, prelude::*, system::System};
 
 const APPLY_ABOUT: &str = "\
 about apply subcommand...
@@ -22,23 +22,18 @@ pub async fn run(opt: Apply) {
     // Validate opt if needed.
     if let Err(err) = apply(opt).await {
         error!("{}", err);
-        cli::exit(None);
+        helper::exit(None);
     }
 }
 
 async fn apply(opt: Apply) -> Result<()> {
-    let config = config::Config::load_from_dir(&opt.config_dir_path).await?;
-    debug!("load configuration {:#?}", config);
-
     let mut system = System::new();
-
-    let ops_chain = operation::plan(&mut system, &config).await?;
-    debug!("planed operations {:#?}", ops_chain);
+    let (config,mut ops_chain) = helper::operation_chain(&mut system, opt.config_dir_path.as_path()).await?;
 
     operation::apply(operation::ApplyParam {
         system: &mut system,
         config: &config,
-        operation_chain: &ops_chain,
+        operation_chain: &mut ops_chain,
         dry_run: opt.dry_run,
     })
     .await?;

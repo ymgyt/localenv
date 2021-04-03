@@ -3,7 +3,7 @@ use serde::{de, Deserialize, Deserializer};
 use std::{fmt, str::FromStr};
 
 /// supported OS.
-#[derive(Debug, Clone, Copy,PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Os {
     Mac,
     Windows,

@@ -1,8 +1,7 @@
 mod subcommands;
-pub use subcommands::apply;
+pub use subcommands::*;
 
-mod exit;
-pub(crate) use exit::exit;
+mod helper;
 
 use structopt::{clap::AppSettings, StructOpt};
 
@@ -45,4 +44,6 @@ pub fn initialize_from_args() -> LocalEnv {
 #[derive(StructOpt, Debug, Clone)]
 pub enum SubCommand {
     Apply(subcommands::Apply),
+    Plan(subcommands::Plan),
 }
+

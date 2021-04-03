@@ -4,6 +4,11 @@ required_envs:
   - name: HOME
     description: path to user home directory
 
+commands:
+  - bin: alacritty
+    version: '*'
+    installer: cargo
+
 filesystem:
   entries:
   - file:

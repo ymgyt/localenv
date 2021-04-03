@@ -17,12 +17,15 @@ where
 
         // check condition
         if let Some(cond) = entry.condition() {
-
             // check os
             if let Some(os) = cond.os {
                 if os != sys.os() {
-                    debug!("entry {} does not match os condition. os: {}", entry.description(), os);
-                    return
+                    debug!(
+                        "entry {} does not match os condition. os: {}",
+                        entry.description(),
+                        os
+                    );
+                    return;
                 }
                 debug!("entry {} match os condition", entry.description());
             }

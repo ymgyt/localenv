@@ -14,7 +14,8 @@ async fn run() {
     init_logger(cmd.verbose);
 
     match cmd.subcommand {
-        cli::SubCommand::Apply(opt) => cli::apply::run(opt).await,
+        cli::SubCommand::Apply(opt) => cli::run_apply(opt).await,
+        cli::SubCommand::Plan(opt) => cli::run_plan(opt).await,
     }
 }
 

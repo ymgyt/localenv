@@ -1,8 +1,8 @@
-use std::{fs, io, path::Path};
+use std::{fmt, fs, io, path::Path};
 
 use crate::{
     prelude::*,
-    system::{self, FilePermission,Os},
+    system::{self, FilePermission, Os},
 };
 
 pub struct System {
@@ -59,14 +59,23 @@ impl system::Api for System {
                     debug!("{} already exists, try removing", link.as_ref().display());
                     fs::remove_file(&link)?;
                     // TODO: care infinite loop.
-                    return self.create_symbolic_link(original, link)
+                    return self.create_symbolic_link(original, link);
                 }
                 Err(io_err.into())
             }
-        }
+        };
     }
 
-    fn os(&self) -> Os { self.os }
+    fn os(&self) -> Os {
+        self.os
+    }
+
+    fn display<D>(&self, msg: D)
+    where
+        D: fmt::Display,
+    {
+        println!("{}", msg);
+    }
 }
 
 impl<'a, T: system::Api> system::Api for &'a mut T {
@@ -86,13 +95,20 @@ impl<'a, T: system::Api> system::Api for &'a mut T {
         (**self).create_symbolic_link(original, link)
     }
 
-    fn os(&self) -> Os {(**self).os() }
+    fn os(&self) -> Os {
+        (**self).os()
+    }
+
+    fn display<D>(&self, msg: D)
+    where
+        D: fmt::Display,
+    {
+        (**self).display(msg)
+    }
 }
 
 impl System {
     pub fn new() -> Self {
-        Self {
-            os: Os::detect(),
-        }
+        Self { os: Os::detect() }
     }
 }

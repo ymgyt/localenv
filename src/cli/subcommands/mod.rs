@@ -1,3 +1,6 @@
-pub mod apply;
+mod apply;
+pub use apply::{run as run_apply, Apply};
 
-pub use apply::Apply;
+mod plan;
+pub use plan::{run as run_plan, Plan};
+

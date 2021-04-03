@@ -1,9 +1,7 @@
 use std::fs;
 
-use colored::*;
-
 use crate::{
-    config::{Config, FileEntry,SymlinkEntry},
+    config::{Config, FileEntry, SymlinkEntry},
     operation::{FilesystemOperation, OperationChain, OperationKind},
     prelude::*,
     system,
@@ -12,7 +10,7 @@ use crate::{
 pub struct ApplyParam<'cfg, 'ops, Api> {
     pub system: Api,
     pub config: &'cfg Config,
-    pub operation_chain: &'ops OperationChain,
+    pub operation_chain: &'ops mut OperationChain,
     pub dry_run: bool,
 }
 
@@ -28,17 +26,19 @@ where
         dry_run,
     } = param;
 
-    for ops in operation_chain.operations() {
-        match ops.kind() {
+    for ops in operation_chain.operations_mut() {
+        let result = match ops.kind() {
             OperationKind::Filesystem(fs) => match fs {
                 FilesystemOperation::CreateFile { entry, .. } => {
-                    apply_create_file_blocking(&mut system, config, dry_run, entry)?;
+                    apply_create_file_blocking(&mut system, config, dry_run, entry)
                 }
-                FilesystemOperation::CreateSymbolicLink { entry, ..} => {
-                    apply_create_symbolic_link_blocking(&mut system,config, dry_run, entry)?;
+                FilesystemOperation::CreateSymbolicLink { entry, .. } => {
+                    apply_create_symbolic_link_blocking(&mut system, config, dry_run, entry)
                 }
             },
-        }
+        };
+
+        ops.set_result(result);
     }
 
     Ok(())
@@ -56,14 +56,6 @@ where
     let dest = entry.dest_path();
     let src = entry.src_path(cfg.root_dir.as_path());
     let mut content = fs::File::open(src.as_path())?;
-
-    // TODO use system api.
-    let msg = format!(
-        "[Create file]\n    Desc: {}\n    File: {}",
-        entry.description(),
-        dest.display(),
-    );
-    println!("{}", msg.yellow());
 
     if dry_run {
         Ok(())
@@ -83,14 +75,6 @@ where
 {
     let original = entry.original_path();
     let link = entry.link_path();
-
-    let msg = format!(
-        "[Create symlink]\n    Desc: {}\n    Orig: {}\n    Link: {}",
-        entry.description(),
-        original.display(),
-        link.display(),
-    );
-    println!("{}", msg.yellow());
 
     if dry_run {
         Ok(())

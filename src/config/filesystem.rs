@@ -34,7 +34,7 @@ impl FilesystemEntry {
             FilesystemEntry::Directory(entry) => entry.base.condition.as_ref(),
         }
     }
-    pub fn description(&self) -> &str{
+    pub fn description(&self) -> &str {
         match self {
             FilesystemEntry::SymbolicLink(entry) => entry.base.description.as_str(),
             FilesystemEntry::File(entry) => entry.base.description.as_str(),

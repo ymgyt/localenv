@@ -7,7 +7,7 @@ pub use system::System;
 mod os;
 pub use os::Os;
 
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug, Clone, Copy)]
 pub enum FilePermission {
     /// for unix family.
     UnixMode(u32),
