@@ -22,3 +22,5 @@ pub trait Api {
     where
         D: fmt::Display;
 }
+
+pub trait CommandApi {}

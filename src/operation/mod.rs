@@ -11,3 +11,5 @@ pub use apply::{apply, ApplyParam};
 
 mod display;
 pub use display::{display, DisplayParam};
+
+pub mod installer;

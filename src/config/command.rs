@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::operation::installer::Installer;
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct Command {
     pub bin: String,
@@ -7,8 +9,3 @@ pub struct Command {
     pub installer: Installer,
 }
 
-#[derive(Deserialize, Debug, Clone)]
-pub enum Installer {
-    #[serde(rename = "cargo")]
-    Cargo,
-}

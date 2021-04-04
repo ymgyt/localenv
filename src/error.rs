@@ -1,6 +1,6 @@
 use backtrace::Backtrace;
 
-use std::{error, fmt, io, path::PathBuf};
+use std::{error, ffi::OsString, fmt, io, path::PathBuf};
 
 pub trait ErrorContext {
     fn context(self, msg: impl Into<String>) -> Self;
@@ -14,9 +14,8 @@ impl<T> ErrorContext for Result<T, Error> {
                 .iter()
                 .nth(5)
                 .and_then(|frame| frame.symbols().first())
-                .map(|symbol| {
-                    (symbol.filename().map(|p| p.to_path_buf()), symbol.lineno())
-                }) {
+                .map(|symbol| (symbol.filename().map(|p| p.to_path_buf()), symbol.lineno()))
+            {
                 Some((filename, line)) => ErrorTrace {
                     filename,
                     line,
@@ -71,6 +70,11 @@ pub enum ErrorKind {
     InvalidFilePermission {
         raw: String,
     },
+    /// Command not found in $PATH.
+    CommandNotFound {
+        name: OsString,
+        which_err: which::Error,
+    },
     /// General unhandled I/O error.
     Io(io::Error),
 }
@@ -97,6 +101,17 @@ impl fmt::Display for Error {
                     "invalid file permission mode: {} (expect like that 664,700)",
                     raw
                 )?;
+            }
+            CommandNotFound {
+                which_err, name, ..
+            } => {
+                use std::os::unix::ffi::OsStrExt;
+                write!(
+                    f,
+                    "command {} not found: {}",
+                    String::from_utf8_lossy(name.as_bytes()),
+                    which_err
+                )?
             }
             Io(err) => {
                 write!(f, "I/O error: {}", err)?;

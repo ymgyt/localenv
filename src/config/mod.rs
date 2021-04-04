@@ -2,7 +2,7 @@ mod filesystem;
 pub use filesystem::{FileEntry, Filesystem, FilesystemEntry, SymlinkEntry};
 
 mod command;
-pub use command::{Command, Installer};
+pub use command::Command;
 
 use serde::Deserialize;
 use tokio::fs;

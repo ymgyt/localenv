@@ -6,15 +6,17 @@ version = "0.1.0"
 [dependencies]
 backtrace = "0.3"
 colored = "2"
+semver = "*"
 serde_yaml = "0.8"
 structopt = "0.3.21"
 tracing = "0.1"
 tracing-subscriber = "0.2"
+which = "*"
 
 [dependencies.serde]
 features = ["derive"]
 version = "1"
 
 [dependencies.tokio]
-features = ["io-util", "rt", "rt-multi-thread", "fs"]
+features = ["io-util", "rt", "rt-multi-thread", "fs", "process"]
 version = "1"
