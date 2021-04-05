@@ -33,3 +33,10 @@ filesystem:
      link_relative_path: Library/Application Support/org.nushell.nu/config.toml
      condition:
        os: mac
+
+  - file:
+      description: tmux config file.
+      env_base: HOME
+      relative_path: .tmux.conf
+      content_from: static/tmux/tmux.conf
+      mode: 0644
