@@ -5,9 +5,13 @@ required_envs:
     description: path to user home directory
 
 commands:
-  - bin: alacritty
-    version: '*'
-    installer: cargo
+#  installer:
+#    mac: brew
+#  entries:
+  - { bin: alacritty, version: '*', installer: cargo }
+#  - bin: kubectx
+#    version: '*'
+# - brew reattach-to-user-namespace
 
 filesystem:
   entries:
