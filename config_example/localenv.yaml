@@ -5,13 +5,31 @@ required_envs:
     description: path to user home directory
 
 commands:
-#  installer:
-#    mac: brew
-#  entries:
-  - { bin: alacritty, version: '*', installer: cargo }
-#  - bin: kubectx
-#    version: '*'
-# - brew reattach-to-user-namespace
+  entries:
+  - bin: alacritty
+    installer:
+      cargo:
+        package: alacritty
+
+  - bin: rg
+    installer:
+      cargo:
+        package: ripgrep
+
+  - bin: reattach-to-user-namespace
+    description: tmux clip board copy helper.
+    installer:
+      brew:
+        package: reattach-to-user-namespace
+    condition:
+      os: mac
+
+  - bin: kubectx
+    installer:
+      brew:
+        package: kubectx
+
+
 
 filesystem:
   entries:
