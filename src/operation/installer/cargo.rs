@@ -16,6 +16,10 @@ pub struct Package {
 }
 
 impl Package {
+    pub fn bin(&self) -> &str {
+        self.bin.as_str()
+    }
+
     fn with_bin<T: Into<String>>(mut self, bin: T) -> Self {
         self.bin = bin.into();
         self

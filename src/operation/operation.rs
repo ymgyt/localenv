@@ -16,6 +16,10 @@ impl OperationChain {
         self.operations.push(ops)
     }
 
+    pub(super) fn extend(&mut self, other: Vec<Operation>) {
+        self.operations.extend(other)
+    }
+
     pub(super) fn operations(&self) -> &[Operation] {
         self.operations.as_slice()
     }
@@ -35,7 +39,7 @@ impl<T> Operation<T> {
     pub(super) fn kind(&self) -> &OperationKind {
         &self.kind
     }
-    pub (super) fn result(&self) -> Option<&Result<T>> {
+    pub(super) fn result(&self) -> Option<&Result<T>> {
         self.result.as_ref()
     }
     pub(super) fn set_result(&mut self, result: Result<T>) {
