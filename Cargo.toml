@@ -6,6 +6,7 @@ version = "0.1.0"
 [dependencies]
 backtrace = "0.3"
 colored = "2"
+nom = "6"
 semver = "*"
 serde_yaml = "0.8"
 structopt = "0.3.21"
@@ -20,3 +21,6 @@ version = "1"
 [dependencies.tokio]
 features = ["io-util", "rt", "rt-multi-thread", "fs", "process"]
 version = "1"
+
+[dev-dependencies]
+pretty_assertions = "0.7"

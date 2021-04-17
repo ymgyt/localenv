@@ -1,6 +1,6 @@
 use crate::{
     config::{Config, FilesystemEntry},
-    operation::{Operation, OperationChain},
+    operation::{Operation, OperationChain, installer},
     prelude::*,
     system,
 };
@@ -41,6 +41,12 @@ where
     });
 
     // commands
+    // TODO: group by installer
+
+    let mut cargo = installer::Cargo::new()?;
+    let installed_packages = cargo.list_installed_packages().await?;
+    debug!("{:#?}", installed_packages);
+
     config.spec.commands.iter().for_each(|cmd| {
         let ops = Operation::install_command(cmd.clone());
 

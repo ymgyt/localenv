@@ -156,7 +156,7 @@ mod tests {
             entry.raw_mode = tc.0.to_owned();
 
             assert_eq!(
-                entry_1.permission().ok(),
+                entry.permission().ok(),
                 Some(FilePermission::UnixMode(tc.1))
             );
         }

@@ -10,6 +10,32 @@ pub struct System {
 }
 
 impl system::Api for System {
+    fn os(&self) -> Os {
+        self.os
+    }
+
+    fn display<D>(&self, msg: D)
+        where
+            D: fmt::Display,
+    {
+        println!("{}", msg);
+    }
+}
+
+impl <'a, T: system::Api> system::Api for &'a mut T {
+    fn os(&self) -> Os {
+        (**self).os()
+    }
+
+    fn display<D>(&self, msg: D)
+        where
+            D: fmt::Display,
+    {
+        (**self).display(msg)
+    }
+}
+
+impl system::FilesystemApi for System {
     #[cfg(target_family = "unix")]
     fn create_file<P, R>(
         &mut self,
@@ -66,19 +92,9 @@ impl system::Api for System {
         };
     }
 
-    fn os(&self) -> Os {
-        self.os
-    }
-
-    fn display<D>(&self, msg: D)
-    where
-        D: fmt::Display,
-    {
-        println!("{}", msg);
-    }
 }
 
-impl<'a, T: system::Api> system::Api for &'a mut T {
+impl<'a, T: system::Api> system::FilesystemApi for &'a mut T {
     fn create_file<P, R>(&mut self, dest: P, content: R, permission: FilePermission) -> Result<()>
     where
         P: AsRef<Path>,
@@ -94,17 +110,12 @@ impl<'a, T: system::Api> system::Api for &'a mut T {
     {
         (**self).create_symbolic_link(original, link)
     }
+}
 
-    fn os(&self) -> Os {
-        (**self).os()
-    }
+impl system::CommandApi for System {}
 
-    fn display<D>(&self, msg: D)
-    where
-        D: fmt::Display,
-    {
-        (**self).display(msg)
-    }
+impl<'a, T: system::CommandApi> system::CommandApi for &'a mut T {
+
 }
 
 impl System {
