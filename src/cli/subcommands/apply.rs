@@ -41,11 +41,12 @@ async fn apply(opt: Apply) -> Result<()> {
     })
     .await?;
 
-    operation::display(operation::DisplayParam{
+    operation::display(operation::DisplayParam {
         operation_chain: &ops_chain,
         system: &mut system,
         config: &config,
-    }).await?;
+    })
+    .await?;
 
     Ok(())
 }

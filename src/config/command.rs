@@ -8,4 +8,3 @@ pub struct Command {
     pub version: String,
     pub installer: Installer,
 }
-

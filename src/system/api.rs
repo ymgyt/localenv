@@ -15,14 +15,14 @@ pub trait Api: FilesystemApi + CommandApi {
 
 pub trait FilesystemApi {
     fn create_file<P, R>(&mut self, dest: P, content: R, permission: FilePermission) -> Result<()>
-        where
-            P: AsRef<Path>,
-            R: io::Read;
+    where
+        P: AsRef<Path>,
+        R: io::Read;
 
     fn create_symbolic_link<P, Q>(&mut self, original: P, link: Q) -> Result<()>
-        where
-            P: AsRef<Path>,
-            Q: AsRef<Path>;
+    where
+        P: AsRef<Path>,
+        Q: AsRef<Path>;
 }
 
 pub trait CommandApi {}

@@ -8,9 +8,9 @@ mod os;
 pub use os::Os;
 
 mod command;
-pub use command::{Command, resolve_binary_path};
+pub use command::{resolve_binary_path, Command};
 
-#[derive(Debug, Clone, Copy,PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum FilePermission {
     /// for unix family.
     UnixMode(u32),
