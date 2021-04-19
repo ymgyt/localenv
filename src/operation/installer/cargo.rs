@@ -97,12 +97,12 @@ mod parser {
     /// parse local path enclosed in parentheses.
     fn local_path(i: &str) -> IResult<&str, PathBuf> {
         combinator::map(
-            sequence::tuple((
+            sequence::delimited(
                 complete::tag("("),
                 complete::take_until(")"),
                 complete::tag(")"),
-            )),
-            |(_, path, _)| PathBuf::from(path),
+            ),
+            |path| PathBuf::from(path),
         )(i)
     }
 
