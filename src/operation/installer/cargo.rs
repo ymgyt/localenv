@@ -98,9 +98,9 @@ mod parser {
     fn local_path(i: &str) -> IResult<&str, PathBuf> {
         combinator::map(
             sequence::delimited(
-                complete::tag("("),
+                character::complete::char('('),
                 complete::take_until(")"),
-                complete::tag(")"),
+                character::complete::char(')'),
             ),
             |path| PathBuf::from(path),
         )(i)
