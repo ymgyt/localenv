@@ -5,60 +5,57 @@ required_envs:
     description: path to user home directory
 
 commands:
-  entries:
-  - bin: alacritty
-    installer:
-      cargo:
-        package: alacritty
+  cargo:
+    - { package: alacritty }
+    - { package: bat }
+    - { package: cargo-add }
+    - { package: cargo-generate}
+    - { package: cargo-make}
+    - { package: exa }
+    - { package: git-trim }
+    - { package: ripgrep,  bin: rg }
+    - { package: starship }
+    - { package: watchexec }
+    - { package: dummy }
+  brew:
+    - { package: reattach-to-user-namespace }
+  go:
+    - { package: kubectx}
 
-  - bin: rg
-    installer:
-      cargo:
-        package: ripgrep
-
-  - bin: reattach-to-user-namespace
-    description: tmux clip board copy helper.
-    installer:
-      brew:
-        package: reattach-to-user-namespace
-    condition:
-      os: mac
-
-  - bin: kubectx
-    installer:
-      brew:
-        package: kubectx
-
-
+lang:
+  rust:
+    xxx: yyy
+  go:
+    goroot: /usr/local/go
 
 filesystem:
   entries:
-  - file:
-      description: alacritty config file.
-      env_base: HOME
-      relative_path: .config/alacritty/alacritty.yml
-      content_from: static/alacritty/alacritty.yml
-      mode: 0644
+    - file:
+        description: alacritty config file.
+        env_base: HOME
+        relative_path: .config/alacritty/alacritty.yml
+        content_from: static/alacritty/alacritty.yml
+        mode: 0644
 
-  - file:
-      description: nushell config file.
-      env_base: HOME
-      relative_path: .config/nu/config.toml
-      content_from: static/nu/config.toml
-      mode: 0644
+    - file:
+        description: nushell config file.
+        env_base: HOME
+        relative_path: .config/nu/config.toml
+        content_from: static/nu/config.toml
+        mode: 0644
 
-  - symlink:
-     description: nushell symlink for mac.
-     original_env_base: HOME
-     original_relative_path: .config/nu/config.toml
-     link_env_base: HOME
-     link_relative_path: Library/Application Support/org.nushell.nu/config.toml
-     condition:
-       os: mac
+    - symlink:
+        description: nushell symlink for mac.
+        original_env_base: HOME
+        original_relative_path: .config/nu/config.toml
+        link_env_base: HOME
+        link_relative_path: Library/Application Support/org.nushell.nu/config.toml
+        condition:
+          os: mac
 
-  - file:
-      description: tmux config file.
-      env_base: HOME
-      relative_path: .tmux.conf
-      content_from: static/tmux/tmux.conf
-      mode: 0644
+    - file:
+        description: tmux config file.
+        env_base: HOME
+        relative_path: .tmux.conf
+        content_from: static/tmux/tmux.conf
+        mode: 0644

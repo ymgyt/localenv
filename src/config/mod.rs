@@ -2,7 +2,7 @@ mod filesystem;
 pub use filesystem::{FileEntry, Filesystem, FilesystemEntry, SymlinkEntry};
 
 mod command;
-pub use command::Command;
+pub use command::{CargoCommand, Command, Commands};
 
 use serde::Deserialize;
 use tokio::fs;
@@ -28,7 +28,7 @@ pub struct Spec {
     pub version: String,
 
     pub required_envs: Vec<RequiredEnvEntry>,
-    pub commands: Vec<Command>,
+    pub commands: Commands,
     pub filesystem: Filesystem,
 }
 

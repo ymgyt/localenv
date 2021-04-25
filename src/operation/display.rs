@@ -53,10 +53,7 @@ where
             },
             OperationKind::Command(cmd_ops) => match cmd_ops {
                 CommandOperation::Install { cmd, .. } => {
-                    let msg = format!(
-                        "[Install command]\n     Bin: {}\n     Ver: {}\n    From: {:?}",
-                        &cmd.bin, &cmd.version, &cmd.installer,
-                    );
+                    let msg = format!("[Install command]\n     Bin: {}", &cmd.bin());
 
                     system.display(msg.yellow());
                 }
